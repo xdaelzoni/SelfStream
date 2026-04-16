@@ -69,20 +69,20 @@ p.description{font-size:16px;color:var(--text-muted);line-height:1.6;margin-bott
 <div class="config-section">
 <h2>⚙️ Source Configuration</h2>
 
-<div class="source-row disabled" id="vix-row">
+<div class="source-row enabled" id="vix-row">
     <div class="source-header">
         <span class="source-label">📺 ViX <span class="source-badge">Multi-language</span></span>
-        <label class="toggle"><input type="checkbox" id="vixEnabled" onchange="toggleSource('vix')"><span class="toggle-slider"></span></label>
+        <label class="toggle"><input type="checkbox" id="vixEnabled" checked onchange="toggleSource('vix')"><span class="toggle-slider"></span></label>
     </div>
     <div class="source-options">
         <select id="vixLang" class="lang-select">` + langOptions + `</select>
     </div>
 </div>
 
-<div class="source-row disabled" id="cinemacity-row">
+<div class="source-row enabled" id="cinemacity-row">
     <div class="source-header">
         <span class="source-label">🎬 CinemaCity <span class="source-badge">Multi-language</span></span>
-        <label class="toggle"><input type="checkbox" id="cinemacityEnabled" onchange="toggleSource('cinemacity')"><span class="toggle-slider"></span></label>
+        <label class="toggle"><input type="checkbox" id="cinemacityEnabled" checked onchange="toggleSource('cinemacity')"><span class="toggle-slider"></span></label>
     </div>
     <div class="source-options">
         <select id="cinemacityLang" class="lang-select">` + langOptions + `</select>

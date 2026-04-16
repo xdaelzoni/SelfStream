@@ -56,9 +56,9 @@ export interface UserConfig {
 }
 
 export const DEFAULT_CONFIG: UserConfig = {
-  vixEnabled: false,
+  vixEnabled: true,
   vixLang: 'en',
-  cinemacityEnabled: false,
+  cinemacityEnabled: true,
   cinemacityLang: 'en',
   animeunityEnabled: false
 };

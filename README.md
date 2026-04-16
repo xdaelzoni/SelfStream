@@ -1,95 +1,110 @@
-# SelfVix🤌 Addon
+# SelfStream 🤌
 
-Addon leggero e standalone per Stremio che estrae e riproduce contenuti da VixSrc e VixCloud con proxy HLS integrato e logica "Synthetic FHD".
+A lightweight, self-hosted Stremio addon with **3 configurable sources**, built-in HLS proxy, multi-language support (40 languages), and automatic subtitle injection.
 
-## Funzionalità
-- **Branding Personalizzato**: Nome `SelfVix🤌` e logo personalizzato.
-- **Proxy HLS Automatico**: Tutti i flussi passano attraverso il server dell'addon per bypassare restrizioni di IP e geolocalizzazione (ideale per Render/HuggingFace).
-- **Synthetic FHD**: Il proxy riscrive il manifest per servire solo la qualità video migliore (1080p), mantenendo tutte le tracce audio e i sottotitoli.
-- **Supporto Anime (Kitsu)**: Integrazione completa con le api di Kitsu
-- **ID Agnostico**: Funziona correttamente con ID TMDB (`786892`), IMDB (`tt30144839`) e Kitsu (`kitsu:12:1`).
-
-## Naming degli Stream
-- **Film/Serie**: Provider `SC 🤌`, Titolo `VIX 1080 🤌`.
-- **Anime**: Provider `AU 🤌`, Titolo `VIX 1080 🤌`.
+> **All sources are disabled by default.** Enable only the ones you need from the configuration page.
 
 ---
 
-## Istruzioni per il Deploy
+## Features
 
-PRIMA DI TUTTO FARE IL FORK E MODIFICARE IL DOCKER FILE:
+| Feature | Description |
+|---|---|
+| **3 Sources** | **VixSrc** (movies & series), **CinemaCity** (movies & series + subtitles), **AnimeUnity** (anime via Kitsu) |
+| **Per-source configuration** | Enable/disable each source independently from the landing page |
+| **40 Languages** | Select preferred audio and subtitle language per source |
+| **HLS Proxy** | All streams are proxied through the addon — bypasses geo/IP restrictions |
+| **Synthetic FHD** | Proxy rewrites manifests to serve only the best available quality (1080p) |
+| **Subtitle Injection** | CinemaCity: up to 90 VTT subtitle tracks injected as HLS subtitle streams with proper BCP-47 language codes |
+| **Audio Selection** | Preferred language → English fallback → first available |
+| **Subtitle Selection** | Preferred language → none (no fallback) |
+| **Localized Titles** | Stream titles show the localized TMDB title in your language |
+| **ID Agnostic** | Works with TMDB (`786892`), IMDB (`tt30144839`), and Kitsu (`kitsu:12:1`) IDs |
 
-[VIDEO
-](https://www.youtube.com/watch?v=nnhwo0C5x3I
-)
-
-### 1. Deploy su Koyeb (Scelta consigliata per stabilità)
-
-[VIDEO
-](https://www.youtube.com/watch?v=IXEi81ONdNo
-)
-
-Koyeb è un'ottima alternativa a Render, più veloce e senza il "periodo di sospensione" (sleep) del piano gratuito.
-
-1.  Crea un account su [Koyeb.com](https://www.koyeb.com/).
-2.  Clicca su **"Create Service"** e seleziona **GitHub**.
-3.  Collega il tuo repository `SelfVix`.
-4.  Nelle impostazioni di configurazione:
-    -   **Builder**: Assicurati che sia selezionato `Docker`.
-    -   **Dockerfile Path**: Inserisci `Dockerfile.hf` (o il nome del file che hai usato).
-    -   **Port**: Imposta `7000`.
-5.  Clicca su **Deploy**. L'addon sarà online in pochi minuti.
-
-
-
-### 2. Deploy su Hugging Face Spaces (Gratuito)
-
-[VIDEO
-](https://www.youtube.com/watch?v=Ti2BNDjm0ns
-)
-
-Ottimo come backup gratuito.
-
-1.  Crea un nuovo **Space** su [Hugging Face](https://huggingface.co/spaces).
-2.  Scegli **Docker** come SDK e il template **Blank**.
-3.  Carica il dockerfile come da video, FATE IL FORK DEL PROGETTO E RINOMINATE DOCKER.HF con il vostro user GITHUB!).
-4.  Prendere il link embed!
-5.  Lo Space si avvierà automaticamente sulla porta `7860`.
-
-### 3. Deploy su Vercel (Velocissimo)
-
-[VIDEO
-](https://www.youtube.com/watch?v=TP3_sbt94Ag&feature=youtu.be)
-
-Dato che il progetto include i file `vercel.json` e `api/index.ts`, puoi ospitarlo come Serverless Function.
-
-1.  Vai su [Vercel.com](https://vercel.com/) e importa il tuo repository GitHub.
-2.  Vercel rileverà automaticamente la configurazione.
-3.  Clicca su **Deploy**.
-4.  L'addon sarà accessibile su `https://tua-app.vercel.app/manifest.json`.
-
+### Stream Labels
+- **VixSrc**: `VixSrc 🤌` — `🎬 Localized Title`
+- **CinemaCity**: `CinemaCity 🤌` — `🎬 Localized Title`
+- **AnimeUnity**: `AU 🤌` — `VIX 1080 🤌`
 
 ---
 
-## Sviluppo Locale
+## Deployment
 
-Se vuoi testare l'addon in locale sul tuo PC o Raspberry Pi:
+> **First**: Fork this repo and update the Dockerfile with your GitHub username.
+>
+> [📺 Video Guide](https://www.youtube.com/watch?v=nnhwo0C5x3I)
+
+### Recommended: VPS / Raspberry Pi (Best compatibility)
+
+A persistent server is the most reliable option — it keeps the in-memory proxy cache alive and avoids cloud IP blocks.
 
 ```bash
-# Installa le dipendenze
+git clone https://github.com/YOUR_USER/SelfStream.git
+cd SelfStream
 npm install
+npm run build
+PORT=7020 node dist/addon.js
+```
 
-# Compila e avvia
+The addon will be available at `http://your-ip:7020/manifest.json`.
+
+### Koyeb (Recommended cloud — stable, no sleep, AnimeUnity may not work)
+
+[📺 Video Guide](https://www.youtube.com/watch?v=IXEi81ONdNo)
+
+1. Create an account on [Koyeb.com](https://www.koyeb.com/).
+2. Click **"Create Service"** → select **GitHub**.
+3. Connect your forked repository.
+4. Configuration:
+   - **Builder**: `Docker`
+   - **Dockerfile Path**: `Dockerfile.hf`
+   - **Port**: `7000`
+5. Click **Deploy**.
+
+### Hugging Face Spaces (Free, AnimeUnity may not work)
+
+[📺 Video Guide](https://www.youtube.com/watch?v=Ti2BNDjm0ns)
+
+1. Create a new **Space** on [Hugging Face](https://huggingface.co/spaces).
+2. Choose **Docker** as SDK, **Blank** template.
+3. Upload the Dockerfile (fork the project first and rename `Dockerfile.hf` with your GitHub username).
+4. Copy the embed link.
+5. The Space runs on port `7860`.
+
+> **Note**: AnimeUnity/VixCloud may not work on HuggingFace due to cloud IP blocking.
+
+### Vercel (Serverless — fast, limited, CinemaCity and AnimeUnity may not work)
+
+[📺 Video Guide](https://www.youtube.com/watch?v=TP3_sbt94Ag)
+
+The project includes `vercel.json` and `api/index.ts` for serverless deployment.
+
+1. Go to [Vercel.com](https://vercel.com/) and import your GitHub repo.
+2. Vercel auto-detects the configuration.
+3. Click **Deploy**.
+4. Access at `https://your-app.vercel.app/manifest.json`.
+
+> **Limitations**: Vercel free plan has a 10s function timeout. Multi-step scraping (AnimeUnity) may exceed this. The in-memory proxy header cache resets between invocations (a fallback is in place, but VPS is more reliable).
+
+---
+
+## Local Development
+
+```bash
+npm install
 npm run build
 npm start
-
-# Oppure via dev (ts-node)
+# Or with ts-node:
 npm run dev
 ```
 
-L'addon sarà accessibile su `http://localhost:7000`.
+The addon runs on `http://localhost:7000` by default.
 
 ---
 
-## Note Tecniche
-L'addon utilizza **AnimeMapping** per convertire gli ID di Kitsu nei percorsi corrispondenti di AnimeUnity, garantendo che anche gli anime siano sempre aggiornati e riproducibili via VixCloud.
+## Technical Notes
+
+- **Proxy architecture**: Stream URLs point to `/proxy/hls/manifest.m3u8` which rewrites all segment/audio/subtitle URIs to also go through the proxy, ensuring playback works from any network.
+- **CinemaCity subtitles**: The player JSON exposes a `subtitle` array with up to 90 VTT tracks. These are wrapped into HLS subtitle playlists (`/proxy/hls/subtitle.m3u8` → `/proxy/hls/subtitle.vtt`) with `X-TIMESTAMP-MAP` injection for sync.
+- **AnimeMapping**: Kitsu IDs are converted to AnimeUnity paths via the AnimeMapping API, then resolved through VixCloud.
+- **Header cache fallback**: On serverless platforms where the in-memory cache is empty, the proxy infers the correct headers from the URL pattern (VixSrc, VixCloud, or generic).
